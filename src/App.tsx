@@ -29,16 +29,18 @@ function App() {
 
   // Remove Technology
   const handleRemoveFromStack = (id: string) => {
-    setSelectedTechnologies((prev) => {
-      const technology = prev.find((item) => item.id === id);
+  const technology = selectedTechnologies.find(
+    (item) => item.id === id
+  );
 
-      if (technology) {
-        toast.info(`${technology.name} removed from your stack!`);
-      }
+  setSelectedTechnologies((prev) =>
+    prev.filter((item) => item.id !== id)
+  );
 
-      return prev.filter((item) => item.id !== id);
-    });
-  };
+  if (technology) {
+    toast.info(`${technology.name} removed from your stack!`);
+  }
+};
 
   // Remove All
   const handleRemoveAll = () => {
