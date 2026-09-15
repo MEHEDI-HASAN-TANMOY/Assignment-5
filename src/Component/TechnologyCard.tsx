@@ -10,39 +10,51 @@ function TechnologyCard({
   onAdd,
 }: TechnologyCardProps) {
   return (
-    <article className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+    <article className="group flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
 
-      <div className="flex items-center gap-4">
-        <img
-          src={technology.icon}
-          alt={`${technology.name} icon`}
-          className="h-12 w-12 object-contain"
-        />
+      {/* Icon + Name */}
+      <div className="flex items-start gap-4">
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gray-50 p-2">
+          <img
+            src={technology.icon}
+            alt={`${technology.name} icon`}
+            className="h-full w-full object-contain"
+          />
+        </div>
 
-        <div>
-          <h2 className="text-xl font-semibold text-gray-900">
+        <div className="min-w-0 flex-1">
+          <h2 className="text-lg font-bold text-gray-900">
             {technology.name}
           </h2>
 
-          <p className="text-sm text-gray-500">
+          <span className="mt-1 inline-block rounded-full bg-orange-50 px-2.5 py-1 text-xs font-medium text-orange-600">
             {technology.category}
-          </p>
+          </span>
         </div>
       </div>
 
-      <p className="mt-4 text-sm leading-6 text-gray-600">
+      {/* Description */}
+      <p className="mt-5 min-h-18 text-sm leading-6 text-gray-600">
         {technology.description}
       </p>
 
-      <div className="mt-4 flex justify-between text-sm text-gray-600">
-        <span>⭐ {technology.rating}</span>
-        <span>{technology.difficulty}</span>
+      {/* Rating + Difficulty */}
+      <div className="mt-5 flex items-center justify-between border-t border-gray-100 pt-4">
+        <div className="flex items-center gap-1 text-sm font-medium text-gray-700">
+          <span>⭐</span>
+          <span>{technology.rating}</span>
+        </div>
+
+        <span className="rounded-full bg-violet-50 px-3 py-1 text-xs font-medium text-violet-600">
+          {technology.difficulty}
+        </span>
       </div>
 
+      {/* Add Button */}
       <button
         type="button"
         onClick={() => onAdd(technology)}
-        className="mt-5 w-full rounded-xl bg-linear-to-r from-orange-500 via-pink-500 to-violet-600 px-4 py-2.5 font-semibold text-white"
+        className="mt-5 w-full rounded-xl  px-4 py-3 font-semibold bg-black text-white"
       >
         Add to Stack
       </button>

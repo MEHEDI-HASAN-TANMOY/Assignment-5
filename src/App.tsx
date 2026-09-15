@@ -6,6 +6,7 @@ import type { Technology } from "./Component/technology";
 import YourStack from "./Component/YourStack";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Footer from "./Component/Footer.tsx";
 
 function App() {
   const [technologies, setTechnologies] = useState<Technology[]>([]);
@@ -76,6 +77,7 @@ function App() {
 
       <Hero />
 
+
       {loading && (
         <p className="py-10 text-center text-gray-600">
           Loading technologies...
@@ -113,6 +115,8 @@ function App() {
           </div>
         </section>
       )}
+
+      <Footer />
     </>
   );
 }
