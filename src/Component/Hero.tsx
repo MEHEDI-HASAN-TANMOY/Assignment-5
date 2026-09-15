@@ -17,8 +17,8 @@ function Hero() {
           </h1>
 
           <p className="mt-6 max-w-xl text-base leading-7 text-gray-600 sm:text-lg">
-           Explore frontend, backend, database and tooling options, <br />
-           compare them side by side and put together the stack that fits your <br />
+           Explore frontend, backend, database and tooling options, 
+           compare them side by side and put together the stack that fits your 
            next projects.
           </p>
 

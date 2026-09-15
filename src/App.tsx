@@ -1,20 +1,113 @@
 
-
-import Navbar from"./Component/Navbar";
+import { useEffect, useState } from "react";
+import Navbar from "./Component/Navbar";
 import Hero from "./Component/Hero";
-
+import TechnologyCard from "./Component/TechnologyCard.tsx";
+import type { Technology } from "./Component/technology";
+import YourStack from "./Component/YourStack.tsx"
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
+  const [technologies, setTechnologies] = useState<Technology[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedTechnologies, setSelectedTechnologies] = useState<Technology[]>([]);
+
+ const handleAddToStack = (technology: Technology) => {
+  setSelectedTechnologies((prev) => {
+    if (prev.some((item) => item.id === technology.id)) {
+      toast.warning(`${technology.name} is already in your stack!`);
+      return prev;
+    }
+
+    toast.success(`${technology.name} added to your stack!`);
+    return [...prev, technology];
+  });
+};
+const handleRemoveFromStack = (id: string) => {
+  setSelectedTechnologies((prev) => {
+    const technology = prev.find((item) => item.id === id);
+
+    if (technology) {
+      toast.info(`${technology.name} removed from your stack!`);
+    }
+
+    return prev.filter((item) => item.id !== id);
+  });
+};
+
+  const handleRemoveFromStack = (id: string) => {
+    setSelectedTechnologies((prev) =>
+      prev.filter((technology) => technology.id !== id)
+    );
+  };
+
+  const handleRemoveAll = () => {
+    setSelectedTechnologies([]);
+  };
+
+  useEffect(() => {
+    fetch("/data/technology.json")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to load technology data");
+        }
+        return response.json();
+      })
+      .then((data: Technology[]) => {
+        setTechnologies(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        setError("Unable to load technologies right now.");
+        setLoading(false);
+      });
+  }, []);
+
   return (
     <>
       <Navbar />
       <Hero />
 
-      <main>
-        <h1 className="p-10 text-center text-3xl font-bold">
-          Dev Stack
-        </h1>
-      </main>
+      {loading && (
+        <p className="py-10 text-center text-gray-600">
+          Loading technologies...
+        </p>
+      )}
+
+      {error && (
+        <p className="py-10 text-center text-red-600">
+          {error}
+        </p>
+      )}
+
+      {!loading && !error && (
+        <section className="mx-auto max-w-7xl px-5 py-12">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
+
+            {/* Technology Cards */}
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {technologies.map((technology) => (
+                <TechnologyCard
+                  key={technology.id}
+                  technology={technology}
+                  onAdd={handleAddToStack}
+                />
+              ))}
+            </div>
+
+            {/* Your Stack */}
+            <YourStack
+              selectedTechnologies={selectedTechnologies}
+              onRemove={handleRemoveFromStack}
+              onRemoveAll={handleRemoveAll}
+            />
+
+          </div>
+        </section>
+      )}
     </>
   );
 }
