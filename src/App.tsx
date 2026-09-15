@@ -1,10 +1,9 @@
-
 import { useEffect, useState } from "react";
 import Navbar from "./Component/Navbar";
 import Hero from "./Component/Hero";
-import TechnologyCard from "./Component/TechnologyCard.tsx";
+import TechnologyCard from "./Component/TechnologyCard";
 import type { Technology } from "./Component/technology";
-import YourStack from "./Component/YourStack.tsx"
+import YourStack from "./Component/YourStack";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -12,39 +11,39 @@ function App() {
   const [technologies, setTechnologies] = useState<Technology[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedTechnologies, setSelectedTechnologies] = useState<Technology[]>([]);
+  const [selectedTechnologies, setSelectedTechnologies] = useState<
+    Technology[]
+  >([]);
 
- const handleAddToStack = (technology: Technology) => {
-  setSelectedTechnologies((prev) => {
-    if (prev.some((item) => item.id === technology.id)) {
-      toast.warning(`${technology.name} is already in your stack!`);
-      return prev;
-    }
+  // Add Technology
+  const handleAddToStack = (technology: Technology) => {
+  if (selectedTechnologies.some((item) => item.id === technology.id)) {
+    toast.warning(`${technology.name} is already in your stack!`);
+    return;
+  }
 
-    toast.success(`${technology.name} added to your stack!`);
-    return [...prev, technology];
-  });
-};
-const handleRemoveFromStack = (id: string) => {
-  setSelectedTechnologies((prev) => {
-    const technology = prev.find((item) => item.id === id);
+  setSelectedTechnologies((prev) => [...prev, technology]);
 
-    if (technology) {
-      toast.info(`${technology.name} removed from your stack!`);
-    }
-
-    return prev.filter((item) => item.id !== id);
-  });
+  toast.success(`${technology.name} added to your stack!`);
 };
 
+  // Remove Technology
   const handleRemoveFromStack = (id: string) => {
-    setSelectedTechnologies((prev) =>
-      prev.filter((technology) => technology.id !== id)
-    );
+    setSelectedTechnologies((prev) => {
+      const technology = prev.find((item) => item.id === id);
+
+      if (technology) {
+        toast.info(`${technology.name} removed from your stack!`);
+      }
+
+      return prev.filter((item) => item.id !== id);
+    });
   };
 
+  // Remove All
   const handleRemoveAll = () => {
     setSelectedTechnologies([]);
+    toast.info("All technologies removed!");
   };
 
   useEffect(() => {
@@ -53,6 +52,7 @@ const handleRemoveFromStack = (id: string) => {
         if (!response.ok) {
           throw new Error("Failed to load technology data");
         }
+
         return response.json();
       })
       .then((data: Technology[]) => {
@@ -68,7 +68,10 @@ const handleRemoveFromStack = (id: string) => {
 
   return (
     <>
+      <ToastContainer />
+
       <Navbar />
+
       <Hero />
 
       {loading && (
